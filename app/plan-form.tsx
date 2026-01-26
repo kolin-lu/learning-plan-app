@@ -6,6 +6,7 @@ import { useColors } from "@/hooks/use-colors";
 import { useState, useEffect } from "react";
 import * as Haptics from "expo-haptics";
 import { MaterialIcons } from "@expo/vector-icons";
+import { DatePicker } from "@/components/date-picker";
 
 export default function PlanFormScreen() {
   const router = useRouter();
@@ -201,27 +202,12 @@ export default function PlanFormScreen() {
         </View>
 
         {/* Target Date Input */}
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.foreground, marginBottom: 8 }}>
-            目标完成日期
-          </Text>
-          <TextInput
-            style={{
-              borderWidth: 1,
-              borderColor: colors.border,
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              fontSize: 14,
-              color: colors.foreground,
-              backgroundColor: colors.surface,
-            }}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor={colors.muted}
-            value={targetDate}
-            onChangeText={setTargetDate}
-          />
-        </View>
+        <DatePicker
+          label="目标完成日期"
+          value={targetDate}
+          onChange={setTargetDate}
+          minimumDate={new Date()}
+        />
 
         {/* Action Buttons */}
         <View style={{ gap: 12 }}>

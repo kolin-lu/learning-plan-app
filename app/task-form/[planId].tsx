@@ -6,6 +6,7 @@ import { useColors } from "@/hooks/use-colors";
 import { useState } from "react";
 import * as Haptics from "expo-haptics";
 import { MaterialIcons } from "@expo/vector-icons";
+import { DatePicker } from "@/components/date-picker";
 
 export default function TaskFormScreen() {
   const router = useRouter();
@@ -151,27 +152,12 @@ export default function TaskFormScreen() {
         </View>
 
         {/* Due Date Input */}
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.foreground, marginBottom: 8 }}>
-            截止日期
-          </Text>
-          <TextInput
-            style={{
-              borderWidth: 1,
-              borderColor: colors.border,
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              fontSize: 14,
-              color: colors.foreground,
-              backgroundColor: colors.surface,
-            }}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor={colors.muted}
-            value={dueDate}
-            onChangeText={setDueDate}
-          />
-        </View>
+        <DatePicker
+          label="截止日期"
+          value={dueDate}
+          onChange={setDueDate}
+          minimumDate={new Date()}
+        />
 
         {/* Action Buttons */}
         <View style={{ gap: 12 }}>

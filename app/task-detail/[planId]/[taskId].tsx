@@ -7,6 +7,8 @@ import { useColors } from "@/hooks/use-colors";
 import { useState, useEffect } from "react";
 import * as Haptics from "expo-haptics";
 import { MaterialIcons } from "@expo/vector-icons";
+import { DatePicker } from "@/components/date-picker";
+import { scheduleTaskReminder, getReminderLabel, type ReminderType } from "@/lib/notifications";
 
 export default function TaskDetailScreen() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function TaskDetailScreen() {
   const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium');
   const [dueDate, setDueDate] = useState("");
   const [newSubtaskName, setNewSubtaskName] = useState("");
+  const [reminder, setReminder] = useState<ReminderType>('none');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,6 +34,7 @@ export default function TaskDetailScreen() {
         setDescription(foundTask.description);
         setPriority(foundTask.priority);
         setDueDate(foundTask.dueDate || "");
+        setReminder(foundTask.reminder || 'none');
       }
     }
   }, [planId, taskId, getTaskById]);
@@ -60,7 +64,12 @@ export default function TaskDetailScreen() {
         description: description.trim(),
         priority,
         dueDate,
+        reminder,
       });
+      
+      // 调度提醒
+      await scheduleTaskReminder(taskId, name.trim(), dueDate, reminder);
+      
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
     } catch (error) {
@@ -305,26 +314,44 @@ export default function TaskDetailScreen() {
         </View>
 
         {/* Due Date Input */}
+        <DatePicker
+          label="截止日期"
+          value={dueDate}
+          onChange={setDueDate}
+          minimumDate={new Date()}
+        />
+
+        {/* Reminder Selection */}
         <View style={{ marginBottom: 20 }}>
           <Text style={{ fontSize: 14, fontWeight: '600', color: colors.foreground, marginBottom: 8 }}>
-            截止日期
+            提醒设置
           </Text>
-          <TextInput
-            style={{
-              borderWidth: 1,
-              borderColor: colors.border,
-              borderRadius: 8,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              fontSize: 14,
-              color: colors.foreground,
-              backgroundColor: colors.surface,
-            }}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor={colors.muted}
-            value={dueDate}
-            onChangeText={setDueDate}
-          />
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {(['none', '5min', '15min', '30min', '1hour', '1day'] as ReminderType[]).map((type) => (
+              <TouchableOpacity
+                key={type}
+                onPress={() => setReminder(type)}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                  borderRadius: 6,
+                  borderWidth: 1,
+                  borderColor: reminder === type ? colors.primary : colors.border,
+                  backgroundColor: reminder === type ? colors.primary + '20' : colors.surface,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: reminder === type ? '600' : '400',
+                    color: reminder === type ? colors.primary : colors.foreground,
+                  }}
+                >
+                  {getReminderLabel(type)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Subtasks Section */}
