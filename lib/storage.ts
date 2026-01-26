@@ -24,6 +24,7 @@ export interface Task {
   completed: boolean;
   completedAt?: string;
   subtasks: Subtask[];
+  reminder?: 'none' | '5min' | '15min' | '30min' | '1hour' | '1day';
   createdAt: string;
   updatedAt: string;
 }
