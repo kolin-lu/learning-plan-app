@@ -7,6 +7,7 @@ import * as Constants from 'expo-constants';
 const APP_VERSION = '1.0.0';
 const DEVELOPER_NAME = 'Kolin Lu';
 const DEVELOPER_BLOG = 'https://linluxi.com';
+const DEVELOPER_GITHUB = 'https://github.com/kolin-lu/learning-plan-app';
 
 export default function AboutScreen() {
   const colors = useColors();
@@ -104,12 +105,24 @@ export default function AboutScreen() {
                   <Text className="text-sm font-medium text-primary">{DEVELOPER_BLOG}</Text>
                 </View>
               </Pressable>
+              <Pressable
+                onPress={() => handleOpenLink(DEVELOPER_GITHUB)}
+                style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+              >
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-sm text-muted">GitHub：</Text>
+                  <Text className="text-sm font-medium text-primary" numberOfLines={1}>
+                    {DEVELOPER_GITHUB.replace('https://', '')}
+                  </Text>
+                </View>
+              </Pressable>
             </View>
           </View>
 
           {/* 应用链接 */}
           <View className="mx-4 rounded-lg overflow-hidden border border-border">
             <LinkButton label="开发者博客" url={DEVELOPER_BLOG} />
+            <LinkButton label="GitHub 仓库" url={DEVELOPER_GITHUB} />
           </View>
 
           {/* 版本和构建信息 */}

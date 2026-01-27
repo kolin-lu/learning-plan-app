@@ -134,28 +134,67 @@ export function DatePicker({ label, value, onChange, minimumDate }: DatePickerPr
             </Text>
 
             {/* 快捷日期选择 */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20, paddingHorizontal: 8 }}>
               {[
-                { label: '明天', days: 1 },
+                { label: '今天', icon: '📅', days: 0 },
+                { label: '明天', icon: '🌅', days: 1 },
+                { label: '下周一', icon: '📆', days: (() => {
+                  const now = new Date();
+                  const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+                  return daysUntilMonday;
+                })() },
+                { label: '一周后', icon: '☀️', days: 7 },
+              ].map((item) => (
+                <Pressable
+                  key={item.days}
+                  onPress={() => setInputValue(getQuickDate(item.days))}
+                  style={({ pressed }) => [{
+                    alignItems: 'center',
+                    opacity: pressed ? 0.6 : 1,
+                  }]}
+                >
+                  <View style={{
+                    width: 64,
+                    height: 64,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: colors.surface,
+                    borderRadius: 16,
+                    marginBottom: 8,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                  }}>
+                    <Text style={{ fontSize: 32 }}>{item.icon}</Text>
+                  </View>
+                  <Text style={{ fontSize: 12, color: colors.foreground }}>
+                    {item.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            {/* 更多快捷选项 */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16, paddingHorizontal: 8 }}>
+              {[
                 { label: '后天', days: 2 },
                 { label: '3天后', days: 3 },
-                { label: '一周后', days: 7 },
                 { label: '两周后', days: 14 },
                 { label: '一个月后', days: 30 },
               ].map((item) => (
                 <Pressable
                   key={item.days}
                   onPress={() => setInputValue(getQuickDate(item.days))}
-                  style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    borderRadius: 6,
+                  style={({ pressed }) => [{
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                    borderRadius: 8,
                     backgroundColor: colors.surface,
                     borderWidth: 1,
                     borderColor: colors.border,
-                  }}
+                    opacity: pressed ? 0.6 : 1,
+                  }]}
                 >
-                  <Text style={{ fontSize: 12, color: colors.foreground }}>
+                  <Text style={{ fontSize: 13, color: colors.foreground }}>
                     {item.label}
                   </Text>
                 </Pressable>
